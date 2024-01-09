@@ -1,0 +1,528 @@
+---
+title: "Youtube API"
+author: "Srivatsav Busi, Haripriya Janardhan Rao , Sahithi Nallani , Clinton Chakramakal"
+date: "2023-04-26"
+output: html_document
+---
+
+## **PROJECT DESCRIPTION**
+
+### 1. Title 
+
+Performing Predictive statistical analysis on top 200 trending videos of multiple countries by using various metrics such as number of comments, likes, and dislikes.
+
+Predictive statistical analysis is a type of statistical analysis that is used to make predictions or forecasts based on historical data. This type of analysis involves the use of statistical models to identify patterns and relationships in the data, and to make predictions about future events or behaviors.
+
+Predictive statistical analysis can be a powerful tool for decision-making and planning, allowing youtubers to make informed predictions about future outcomes and take action based on these predictions.
+
+### 2. Team Members
+
+- Srivatsav Busi
+- Haripriya Janardhan Rao 
+- Sahithi Nallani 
+- Clinton Chakramakal
+
+### 3. Business Context
+
+Performing predictive statistical analysis on the top 200 trending videos of multiple countries using various metrics such as comments, likes, and dislikes could provide valuable insights for businesses in the entertainment, media, and advertising industries.
+
+For example, if a business is interested in launching a new product or service and wants to advertise it through a video campaign, they could use predictive statistical analysis on trending videos to identify which metrics, such as comments or likes, are most correlated with high engagement and success rates. This information could help them make data-driven decisions about which types of videos and metrics to focus on their own advertising campaigns.
+
+Additionally, businesses could use predictive statistical analysis to identify patterns and trends in video engagement across different countries and demographics. For example, they could use the analysis to identify which types of videos are most popular among certain age groups, genders, or regions. This information could help businesses tailor their advertising campaigns to better reach specific target audiences.
+
+Overall, performing predictive statistical analysis on trending videos could provide valuable insights for businesses looking to optimize their advertising campaigns and improve their engagement and success rates.
+
+
+### 4. Problem Description
+
+
+Among all the social media platforms, YouTube stands out as it provides insights into viewership and subscriber numbers.
+
+We are planning to analyze trending videos through various metrics such as comments, likes, and dislikes.
+
+The aim is to comprehend the video categories that are currently popular and can help content creators in maximizing their revenue.
+
+The insights derived from the data on trending videos can be valuable to identify factors that are associated with trending videos and make data-driven decisions to improve their video content and optimize revenue.
+
+### 5. URL Link to download the ZIP file of data we collected from the API
+
+### 6. Data Summary
+
+
+ step-by-step procedures to fetch data points using the YouTube API 
+ 
+Go to the Google Developer Console website and create a new project if you haven't already. You can do this by clicking on the "Select a project" dropdown in the top bar and then clicking on "New Project". Give your project a name and click on "Create".
+
+Once you have created the project, enable the YouTube Data API for your project by following these steps:
+
+a. Click on the "Enable APIs and Services" button on the project dashboard.
+
+b. Search for "YouTube Data API" and click on the corresponding result.
+
+c. Click on the "Enable" button to enable the API for your project.
+
+After enabling the YouTube Data API, you will need to create an API key to use for authentication. To create an API key, follow these steps:
+
+a. Click on the "Create credentials" button on the project dashboard.
+
+b. Select "API key" from the dropdown menu.
+
+c. Choose the type of API key you want to create. For this purpose, select "Server key".
+
+d. Follow the instructions to create the API key. 
+
+Once you have created the API key, you can use it to authenticate with the YouTube API in R. To do this, you will need to install and load the httr and jsonlite packages in R.
+
+### 6.1 Importing required libraries for data fetch
+
+```{r,message=FALSE,warning=FALSE}
+
+rm(list = ls())
+file.remove(".httr-oauth")
+
+library(httr)
+library(jsonlite)
+library(jsonlite)
+library(httr)
+library(dplyr)
+library(tidyverse)
+library(tidyr)
+library(tidyverse)
+library(stringr)
+library(h2o)
+library(tidytext)
+library(caTools)
+library(textdata)
+library(kableExtra)
+library(corrplot)
+library(Hmisc)
+library(skimr)
+library(recipes)
+library(stringr)
+
+
+```
+
+##code for extracting YouTube Data
+
+
+```{r,message=FALSE,warning=FALSE}
+
+# Initialize empty data frame
+df <- data.frame()
+
+# Define parameters for API request
+part <- "snippet,statistics"
+chart <- "mostPopular"
+max_results <- 50
+api_key <- "AIzaSyA1IAF_ehHniFxPz4WIHLlzAFlYMSrHKGU"
+
+# Define a list of countries and their corresponding region codes
+countries <- list(
+  "CA" = "Canada",
+  "GB" = "United Kingdom",
+  "US" = "United States",
+  "AR" = "Argentina",
+  "AU" = "Australia",
+  "AT" = "Austria",
+  "BE" = "Belgium",
+  "BA" = "Bosnia and Herzegovina",
+  "BR" = "Brazil",
+  "BG" = "Bulgaria",
+  "CL" = "Chile",
+  "CO" = "Colombia",
+  "CR" = "Costa Rica",
+  "KR" = "South Korea",
+  "HR" = "Croatia",
+  "JP" = "Japan",
+  "JO" = "Jordan",
+  "KZ" = "Kazakhstan",
+  "KE" = "Kenya",
+  "KW" = "Kuwait",
+  "LV" = "Latvia",
+  "LB" = "Lebanon",
+  "LY" = "Libya",
+  "LI" = "Liechtenstein",
+  "LT" = "Lithuania",
+  "ZA" = "South Africa",
+  "CY" = "Cyprus",
+  "CZ" = "Czech Republic",
+  "DK" = "Denmark",
+  "DO" = "Dominican Republic",
+  "EC" = "Ecuador",
+  "EG" = "Egypt",
+  "SV" = "El Salvador",
+  "EE" = "Estonia"
+)
+# countries <- list(
+#   "CA" = "Canada","UK" = "United Kingdom")
+
+df <- data.frame()
+# Loop through each country and retrieve trending videos data
+for (region_code in names(countries)) {
+  
+  # Loop through each iteration (max 4) and retrieve 50 videos per iteration
+  for (i in 1:4) {
+    # Calculate the start index for this request
+    start_index <- (i - 1) * max_results + 1
+    
+    # If 200 videos have been retrieved for this country, break out of the loop
+    if (nrow(df[df$country == countries[[region_code]],]) >= 200) {
+      break
+    }
+    
+    # Construct API request URL with the start index and region code
+    url <- paste0("https://www.googleapis.com/youtube/v3/videos?part=", part, "&chart=", chart,
+                  "&regionCode=", region_code, "&maxResults=", max_results,
+                  "&key=", api_key, "&startIndex=", start_index)
+    
+    # Send API request and convert response to JSON format
+    response <- GET(url)
+    json_data <- content(response, as = "text")
+    trending_videos <- fromJSON(json_data)
+    
+    # Extract video information from response
+    kind <- trending_videos$items$kind
+    etag <- trending_videos$items$etag
+    id <- trending_videos$items$id
+    date <- trending_videos$items$snippet$publishedAt
+    channel.id <- trending_videos$items$snippet$channelId
+    titles <- trending_videos$items$snippet$title
+    description <- trending_videos$items$snippet$description
+    thumbnails.default.url<- trending_videos$items$snippet$thumbnails$default$url
+    thumbnails.default.width<- trending_videos$items$snippet$thumbnails$default$width
+    thumbnails.default.height<- trending_videos$items$snippet$thumbnails$default$height
+    thumbnails.medium.url<- trending_videos$items$snippet$thumbnails$medium$url
+    thumbnails.medium.width<- trending_videos$items$snippet$thumbnails$medium$width
+    thumbnails.medium.height<- trending_videos$items$snippet$thumbnails$medium$height
+    thumbnails.high.url<- trending_videos$items$snippet$thumbnails$high$url
+    thumbnails.high.width<- trending_videos$items$snippet$thumbnails$high$width
+    thumbnails.high.height<- trending_videos$items$snippet$thumbnails$high$height
+    thumbnails.standard.url<- trending_videos$items$snippet$thumbnails$standard$url
+    thumbnails.standard.width<- trending_videos$items$snippet$thumbnails$standard$width
+    thumbnails.standard.height<- trending_videos$items$snippet$thumbnails$standard$height
+    thumbnails.maxres.url<- trending_videos$items$snippet$thumbnails$maxres$url
+    thumbnails.maxres.width<- trending_videos$items$snippet$thumbnails$maxres$width
+    thumbnails.maxres.height<- trending_videos$items$snippet$thumbnails$maxres$height
+    channelTitle <- trending_videos$items$snippet$channelTitle
+    categoryId <- trending_videos$items$snippet$categoryId
+    live <- trending_videos$items$snippet$liveBroadcastContent
+    default_language <- trending_videos$items$snippet$defaultLanguage
+    views <- trending_videos$items$statistics$viewCount
+    likes <- trending_videos$items$statistics$likeCount
+    favorites <- trending_videos$items$statistics$favoriteCount
+    comments <- trending_videos$items$statistics$commentCount
+    country <- countries[[region_code]]
+    
+    # Combine video information into a data frame and append to df
+    df <- rbind(df, data.frame(kind=kind,etag=etag, id=id,date = date, channel.id =channel.id ,titles = titles,
+                               description = description,thumbnails.default.url=thumbnails.default.url,
+                               thumbnails.default.width=thumbnails.default.width,thumbnails.default.height=thumbnails.default.height,
+                               thumbnails.medium.url=thumbnails.medium.url,thumbnails.medium.width=thumbnails.medium.width,
+                               thumbnails.medium.height=thumbnails.medium.height,thumbnails.high.url=thumbnails.high.url,
+                               thumbnails.high.width=thumbnails.high.width,thumbnails.high.height=thumbnails.high.height,
+                               thumbnails.standard.url=thumbnails.standard.url,thumbnails.standard.width=thumbnails.standard.width,
+                               thumbnails.standard.height=thumbnails.standard.height,thumbnails.maxres.url=thumbnails.maxres.url,
+                               thumbnails.maxres.width=thumbnails.maxres.width, thumbnails.maxres.height= thumbnails.maxres.height,
+                               channelTitle = channelTitle, categoryID = categoryId,likes = likes, favorites = favorites,
+                               views = views,comments = comments, country=country
+    ))
+  }
+}
+
+# Save data to CSV file
+write.csv(df, "trending_videosnew.csv", row.names = FALSE)
+```
+
+
+
+### 6.3 Data Processing
+
+Removing unnecessary columns using the "select" function, and saves the modified data frame in a new variable.
+
+```{r,message=FALSE,warning=FALSE}
+df = read_csv("merged_data.csv")
+# Remove columns from the dataframe not required for further analysis
+df1 <- select(df,-kind,-etag, -description,-thumbnails.default.url,-thumbnails.high.url,
+              -thumbnails.maxres.url,-thumbnails.medium.url,-thumbnails.standard.url,-titles)
+```
+
+Checking if the data frame has any missing values, replacing the missing values in those columns with their mean value and verify that no null values are present.
+
+```{r}
+any(is.na(df1))
+# Replace missing values with mean value
+colums_to_replace<- c("thumbnails.standard.height", "thumbnails.standard.width", "thumbnails.maxres.height", "thumbnails.maxres.width", "likes", "comments")
+df1[colums_to_replace] <- lapply(df1[colums_to_replace], function(x) {
+  mean_val <- mean(x, na.rm = TRUE)
+  replace(x, is.na(x), mean_val)
+})
+# Check if the dataframe has any missing values
+colSums(is.na(df1))
+```
+
+Extracting the date part from the 'datetime' column, calculating the number of days between each date and a specified date, and adding the resulting number of days and weekday as new columns.
+
+```{r,message=FALSE,warning=FALSE}
+# Extract only the date part from the datetime column in the dataframe
+df1$date <- substr(df$date, 1, 10)
+df1$date <- as.Date(df1$date)
+# Specify the date to calculate the difference from
+date2_str <- '2023-04-25'
+date2 <- as.Date(date2_str)
+# Calculate the difference between 'date' column and specified date
+df1$days <- as.numeric(difftime(date2, df$date, units = "days"))
+df1$weekday <- weekdays(as.Date(df1$date))
+```
+
+Matching the category ID in 'df1' dataframe with the corresponding category name in 'dfm' dataframe and adds the category name as a new column in 'df1'.
+
+```{r,message=FALSE,warning=FALSE}
+dfm <- data.frame(categoryID = c(1, 2, 10, 15, 17,18,19,20,21,22,23,24,25,26,27,28,29),
+                  categoryName = c("Film and Animation","Autos and Vehicles","Music","Pets and Animals","Sports","Short Movies",
+                                   "Travel and Events","Gaming","Videoblogging","People and Blogs","Comedy","Entertainment",
+                                   "News and Politics","How to and Style","Education","Science and Technology","Nonprofits and Activism"))
+
+
+df1$categoryName <- dfm$categoryName[match(df1$categoryID, dfm$categoryID)]
+```
+
+```{r,message=FALSE,warning=FALSE}
+summary(df1)
+head(df1,n=10)
+```
+
+performing data aggregation and manipulation operations on a dataframe 'df1' including aggregation of 'likes' by weekday and selecting the top 10 channels by frequency of occurrence in rows where 'views' are greater than 10000000.
+
+```{r,message=FALSE,warning=FALSE}
+# Aggregate likes by weekday
+likes_by_weekday <- aggregate(likes ~ weekday, df1, sum)
+df_subset <- subset(df1, views > 10000000)
+freq_table <- table(df_subset$channelTitle)
+sorted_freq_table <- sort(freq_table, decreasing = TRUE)
+top_10_channels <- names(sorted_freq_table)[1:10]
+```
+
+Creating a new dataframe 'channel_counts' that contains the names of channels and their corresponding video counts. Selecting the top 10 channels by their names, and stores their counts in a new dataframe 'top_10_counts'.
+
+```{r,message=FALSE,warning=FALSE}
+# Create a new data frame with channel names and their video counts
+channel_counts <- data.frame(
+  channelTitle = names(freq_table),
+  video_count = as.vector(freq_table)
+)
+sorted_channel_counts <- channel_counts[order(-channel_counts$video_count),]
+top_10_channels <- head(sorted_channel_counts$channelTitle, 10)
+top_10_counts <- sorted_channel_counts[sorted_channel_counts$channelTitle %in% top_10_channels,]
+```
+
+###Exploratory Data Analysis (EDA) Visualizations
+
+```{r,message=FALSE,warning=FALSE}
+# Create a bar chart with the top 10 channels and their video counts
+ggplot(data = top_10_counts, aes(x = reorder(channelTitle, -video_count), y = video_count)) +
+  geom_bar(stat = "identity", fill = "#D55E00",  size = 1, width = 0.5, alpha = 0.8) +
+  ggtitle("Top 10 Channels with Most Count of Trending Videos") +
+  xlab("Channel Title") +
+  ylab("Video Count") +
+  theme(axis.text.x = element_text(angle = 90, hjust = 1)) +
+  theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank()) +
+  theme(axis.line.x = element_blank(), axis.ticks.x = element_blank()) +
+  theme(plot.title = element_text(face = "bold"))
+```
+
+
+
+```{r,message=FALSE,warning=FALSE}
+# Create line plot FOR Likes over time
+ggplot(data = df1, aes(x = days, y = likes/1000000, group = 1)) +
+  geom_line(color = "#009E73") +
+  scale_y_continuous(labels = function(x) paste0(x, "M")) +
+  labs(x = "Days", y = "Likes (in millions)") +
+  ggtitle("Likes over time")
+```
+
+
+```{r,message=FALSE,warning=FALSE}
+# Create line plot FOR Views over time
+ggplot(data = df1, aes(x = days, y = views)) +
+  geom_line(color = "#D55E00") +
+  labs(x = "Days", y = "Views (in 10 million)") +
+  ggtitle("Views over time") +
+  theme_minimal() +
+  scale_y_continuous(labels = function(x) format(x/10^7, scientific = FALSE))
+```
+
+
+```{r,message=FALSE,warning=FALSE}
+# Aggregate likes by weekday
+likes_by_weekday <- aggregate(likes ~ weekday, df1, sum)
+
+# Create bar plot
+ggplot(likes_by_weekday, aes(x = weekday, y = likes/1000000)) +
+  geom_bar(stat = "identity", fill = "steelblue") +
+  labs(title = "Likes per Weekday", x = "Weekday", y = "Likes (in millions)")
+```
+
+```{r,message=FALSE,warning=FALSE}
+ggplot(df1, aes(x = weekday, y = views/10000000, color = factor(categoryName))) +
+  geom_point(size = 3, alpha = 0.7) +
+  labs(title = "Relationship between Weekday, Views, and categoryName",
+       x = "Weekday",
+       y = "Views (in 10 millions)",
+       color = "categoryName") +
+  theme_minimal() +
+  scale_y_continuous(limits = c(0, max(df1$views/10000000)), 
+                     breaks = seq(0, max(df1$views/10000000), by = 1))
+
+
+
+
+```
+
+```{r,message=FALSE,warning=FALSE}
+top_categories <- df1 %>%
+  group_by(categoryName) %>%
+  summarise(total_views = sum(views)) %>%
+  arrange(desc(total_views)) %>%
+  head(10)
+
+ggplot(top_categories, aes(x = "", y = total_views, fill = categoryName)) +
+  geom_bar(width = 1, stat = "identity") +
+  coord_polar(theta = "y") +
+  labs(fill = "categoryName") +
+  theme_void() +
+  scale_fill_manual(values = c("#E69F00", "#56B4E9", "#009E73", "#F0E442", "#0072B2", "#D55E00", "#CC79A7", "#999999", "#BEBADA", "#FB8072"))
+```
+
+```{r,message=FALSE,warning=FALSE}
+df1$categoryID <- factor(df1$categoryName)
+ggplot(df1, aes(x = likes/1000000, y = comments, color = categoryName)) +
+  geom_point(alpha = 0.5) +
+  scale_x_continuous(limits = c(0, 2)) +
+  scale_y_continuous(limits = c(0, 1e5)) +
+  scale_color_hue(h = c(0, 360), c = 100, l = 50) +
+  labs(title = "Comments by Likes", x = "Likes (in millions)", y = "Comments", color = "categoryName") +
+  theme_bw()
+```
+
+
+```{r,message=FALSE,warning=FALSE}
+weekday_names <- weekdays(Sys.Date() + 0:6)
+
+# Convert the weekday column to numbers using match()
+df1$weekday_num <- match(df1$weekday, weekday_names)
+df1$Country_Code <- as.numeric(factor(df1$ country, levels = unique(df1$country)))
+
+```
+
+
+
+
+### 7. H2O MODELS
+
+
+```{r,message=FALSE,warning=FALSE}
+library(h2o)
+h2o.init(nthreads = -1)
+# Convert data to H2O format
+youtube_data <- as.h2o(df1)
+# Split data into training, validation and test sets
+split <- h2o.splitFrame(youtube_data, ratios = c(0.65, 0.2), seed = 3)
+train <- split[[1]]
+valid <- split[[2]]
+test <- split[[3]]
+# Define feature and target columns
+features <- c("thumbnails.default.width","thumbnails.default.height","categoryID",
+              "likes","comments","favorites","weekday_num","Country_Code","days")
+target <- "views"
+```
+
+### Random Forest
+
+- Random Forest is an ensemble learning method that combines multiple decision trees to create a more robust and stable model that can handle noisy or missing data.
+- It can capture non-linear relationships and interactions between features, making it a suitable choice for many regression problems.
+
+```{r,message=FALSE,warning=FALSE}
+# Train a random forest model
+rf_model <- h2o.randomForest(model_id = "rf_model", x = features, y = target, training_frame = train,
+                             validation_frame = valid, ntrees = 100, max_depth = 20)
+rf_predictions <- h2o.predict(rf_model, newdata = test)
+
+# Evaluate random forest model performance
+rf_performance <- h2o.performance(rf_model, newdata = test)
+```
+
+### Gradient Boosting Machines
+
+- Gradient Boosting Machines (GBM) are also an ensemble learning method that combines multiple decision trees in a sequential manner, focusing on the errors of the previous tree and adjusting subsequent trees to correct those errors.
+- GBM models can handle large datasets, high-dimensional feature spaces, and non-linear relationships between features.
+
+```{r,message=FALSE,warning=FALSE}
+# Train a GBM model
+gbm_model <- h2o.gbm(model_id = "gbm_model", x = features, y = target, training_frame = train,
+                     validation_frame = valid, ntrees = 100, max_depth = 20, learn_rate = 0.1)
+gbm_predictions <- h2o.predict(gbm_model, newdata = test)
+
+# Evaluate GBM model performance
+gbm_performance <- h2o.performance(gbm_model, newdata = test)
+```
+
+### Neural Network:
+
+- Neural Networks are a type of machine learning model that consists of multiple interconnected layers of artificial neurons, which can learn and represent complex non-linear relationships between inputs and outputs.
+- They can handle a wide range of input types, including images, text, and time-series data, and can perform well on many challenging regression and classification tasks.
+
+```{r,message=FALSE,warning=FALSE}
+# Train a neural network model
+nn_model <- h2o.deeplearning(model_id = "nn_model", x = features, y = target, training_frame = train,
+                             validation_frame = valid, hidden = c(64, 64), epochs = 100,
+                             activation = "RectifierWithDropout", input_dropout_ratio = 0.1,
+                             sparse = TRUE)
+nn_predictions <- h2o.predict(nn_model, newdata = test)
+
+# Evaluate neural network model performance
+nn_performance <- h2o.performance(nn_model, newdata = test)
+```
+
+```{r,message=FALSE,warning=FALSE}
+# Create a table of model performance metrics
+table <- data.frame(Model = c("Random Forest", "GBM", "Neural Network"),
+                    R2 = c(base::round(rf_performance@metrics$r2, 4),
+                           base::round(gbm_performance@metrics$r2, 4),
+                           base::round(nn_performance@metrics$r2, 4)),
+                    MSE = c(base::round(rf_performance@metrics$MSE, 4),
+                            base::round(gbm_performance@metrics$MSE, 4),
+                            base::round(nn_performance@metrics$MSE, 4)))
+
+print(table)
+```
+
+- The Random Forest and GBM models appear to have performed very well, with R2 values of 0.9754 and 0.9996, respectively. 
+- Additionally, their mean squared errors (MSE) are significantly lower than the Neural Network model.
+- Therefore, these models have a better fit to the data and can more accurately predict future outcomes.
+
+- On the other hand, the Neural Network model has an R2 value of 0.6858, which is considerably lower than the other two models. Moreover, its MSE is much higher, indicating that the model's predictions are less accurate compared to the other models.
+
+- In conclusion, based on the provided metrics, it seems that the GBM and Random Forest models are better suited for this specific problem than the Neural Network model.
+- However, it's essential to keep in mind that model selection should not be based solely on these metrics, and other factors such as interpretability, computational complexity, and domain-specific requirements should also be taken into account.
+
+- In this case, the high R2 value and low MSE suggest that the Random Forest model was able to capture the underlying patterns in the data accurately, resulting in highly accurate predictions.
+GBM:
+
+- The high R2 value and low MSE suggest that the GBM model was able to capture the underlying patterns in the data more precisely than the Random Forest, resulting in highly accurate predictions.
+
+- The relatively lower R2 value and higher MSE of the Neural Network model in this case suggest that the model may not have been able to capture the underlying patterns in the data as accurately as the other models. This could be due to factors such as the model architecture, data preprocessing, or hyperparameter tuning.
+
+```{r,message=FALSE,warning=FALSE}
+
+
+
+```
+
+```{r,message=FALSE,warning=FALSE}
+
+
+
+```
+
