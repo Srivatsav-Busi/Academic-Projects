@@ -1,0 +1,236 @@
+# Srivatsav Job Search GPT Configuration
+
+# LLM Configuration (OpenAI or OpenRouter)
+llm:
+  provider: "openrouter"  # "openai" or "openrouter"
+  api_key: "${OPENROUTER_API_KEY}"  # Set via environment variable
+  model: "anthropic/claude-3.5-sonnet"  # OpenRouter model
+  temperature: 0.7
+  max_tokens: 2000
+  base_url: "https://openrouter.ai/api/v1"  # OpenRouter endpoint
+
+# OpenAI Configuration (fallback)
+openai:
+  api_key: "${OPENAI_API_KEY}"  # Set via environment variable
+  model: "gpt-4o"
+  temperature: 0.7
+  max_tokens: 2000
+
+# Target Job Configuration
+target_roles:
+  primary:
+    - "ML Engineer"
+    - "Senior ML Engineer"
+    - "ML Platform Engineer"
+    - "ML Infrastructure Engineer"
+    - "Data Scientist"
+    - "Senior Data Scientist"
+    - "Staff ML Engineer"
+    - "Principal ML Engineer"
+  
+  secondary:
+    - "Data Engineer"
+    - "Senior Data Engineer"
+    - "Data Platform Engineer"
+    - "Cloud ML Architect"
+    - "ML Systems Engineer"
+    - "Applied Scientist"
+    - "Research Scientist"
+
+# Target Companies (tiered by priority)
+target_companies:
+  tier_1:  # Dream companies
+    - "Google"
+    - "Meta"
+    - "Netflix"
+    - "Uber"
+    - "Airbnb"
+    - "Stripe"
+    - "Databricks"
+    - "Snowflake"
+  
+  tier_2:  # Strong interest
+    - "Amazon"
+    - "Microsoft"
+    - "Apple"
+    - "Tesla"
+    - "Spotify"
+    - "Pinterest"
+    - "LinkedIn"
+    - "Salesforce"
+  
+  tier_3:  # Good opportunities
+    - "Palantir"
+    - "Databricks"
+    - "Confluent"
+    - "MongoDB"
+    - "Elastic"
+    - "HashiCorp"
+    - "Cloudflare"
+    - "Twilio"
+
+# Skills & Keywords
+skills:
+  technical:
+    - "Python"
+    - "R"
+    - "SQL"
+    - "PySpark"
+    - "Shell Scripting"
+    - "Apache Spark"
+    - "Pandas"
+    - "NumPy"
+    - "Scikit-learn"
+    - "Matplotlib"
+    - "Seaborn"
+    - "NLTK"
+    - "TensorFlow"
+    - "PyTorch"
+    - "Apache Airflow"
+    - "Apache NiFi"
+    - "Kubeflow Pipelines"
+    - "Google Cloud Platform"
+    - "AWS"
+    - "Azure"
+    - "Vertex AI"
+    - "BigQuery"
+    - "Dataflow"
+    - "EMR"
+    - "Lambda"
+    - "Step Functions"
+    - "Docker"
+    - "Kubernetes"
+    - "Terraform"
+    - "TFRecord Processing"
+    - "Data Security"
+    - "Encryption Workflows"
+    - "ML Infrastructure"
+    - "MLOps"
+    - "Model Deployment"
+    - "Feature Engineering"
+    - "Statistical Analysis"
+    - "Machine Learning"
+    - "Deep Learning"
+    - "Data Visualization"
+    - "A/B Testing"
+    - "Experimental Design"
+  
+  soft_skills:
+    - "Technical Mentoring"
+    - "Cross-functional Collaboration"
+    - "Problem Solving"
+    - "System Design"
+    - "Performance Optimization"
+    - "Process Improvement"
+    - "Continuous Learning"
+
+# Location Preferences
+locations:
+  primary:
+    - "San Francisco Bay Area, CA"
+    - "Atlanta, GA"
+    - "Seattle, WA"
+    - "New York, NY"
+    - "Austin, TX"
+  
+  secondary:
+    - "Remote"
+    - "Boston, MA"
+    - "Denver, CO"
+    - "Chicago, IL"
+    - "Los Angeles, CA"
+
+# Job Search Configuration
+job_search:
+  provider: "serpapi"
+  serpapi_key: "${SERPAPI_KEY}"
+  default_query: "ML Engineer"
+  default_location: "United States"
+  results_limit: 20
+  search_filters:
+    experience_levels: ["entry", "mid", "senior", "executive"]
+    job_types: ["full-time", "part-time", "contract", "internship"]
+    include_remote: true
+  auto_search:
+    enabled: false
+    frequency: "daily"
+    target_roles: ["ML Engineer", "ML Infrastructure Engineer", "Data Scientist"]
+
+# Salary Expectations (USD)
+salary:
+  minimum: 95000
+  target: 130000
+  maximum: 200000
+  equity_consideration: true
+
+# Application Strategy
+application:
+  daily_limit: 50  # Max applications per day
+  follow_up_days: 7  # Days to wait before follow-up
+  priority_keywords:
+    - "senior"
+    - "staff"
+    - "principal"
+    - "lead"
+    - "architect"
+    - "platform"
+    - "infrastructure"
+    - "ml"
+    - "machine learning"
+    - "data engineering"
+    - "pipeline"
+    - "real-time"
+    - "streaming"
+    - "distributed"
+
+# Database Configuration
+database:
+  type: "sqlite"
+  path: "data/job_tracker.db"
+  
+# Vector Store Configuration
+vector_store:
+  type: "faiss"
+  path: "data/embeddings"
+  chunk_size: 1000
+  chunk_overlap: 200
+
+# Email Configuration
+email:
+  smtp_server: "smtp.gmail.com"
+  smtp_port: 587
+  use_tls: true
+
+# LinkedIn Configuration
+linkedin:
+  api_enabled: false  # Requires LinkedIn API access
+  message_templates:
+    connection_request: "Hi {name}, I noticed your work at {company} and would love to connect. I'm a data engineer with experience in {relevant_skill} and would appreciate the opportunity to learn more about your team's work."
+    follow_up: "Hi {name}, I wanted to follow up on my application for the {position} role. I'm very excited about the opportunity and would love to discuss how my experience in {relevant_experience} could contribute to your team."
+
+# Job Search APIs
+apis:
+  serpapi:
+    enabled: true
+    api_key: "${SERPAPI_KEY}"
+  indeed:
+    enabled: false
+    api_key: "${INDEED_API_KEY}"
+  glassdoor:
+    enabled: false
+    api_key: "${GLASSDOOR_API_KEY}"
+
+# Monitoring & Analytics
+monitoring:
+  track_applications: true
+  track_responses: true
+  track_interviews: true
+  generate_reports: true
+  report_frequency: "weekly"
+
+# UI Configuration
+ui:
+  theme: "light"
+  dashboard_refresh: 300  # seconds
+  max_jobs_display: 50
+  enable_auto_refresh: true

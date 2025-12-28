@@ -1,0 +1,421 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UPSC AI Platform - Prelims Test Generator</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/echarts@5.4.3/dist/echarts.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@splidejs/splide@4.1.4/dist/js/splide.min.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/@splidejs/splide@4.1.4/dist/css/splide.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #1a2332;
+            --secondary: #d4af37;
+            --accent: #4a9b8e;
+            --text: #2c3e50;
+            --success: #27ae60;
+            --warning: #f39c12;
+        }
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #ffffff;
+            color: var(--text);
+        }
+        
+        .font-display {
+            font-family: 'Playfair Display', serif;
+        }
+        
+        .hero-bg {
+            background: linear-gradient(135deg, rgba(26, 35, 50, 0.9), rgba(74, 155, 142, 0.8)), url('resources/hero-study.png');
+            background-size: cover;
+            background-position: center;
+            min-height: 40vh;
+        }
+        
+        .card-hover {
+            transition: all 0.3s ease;
+        }
+        
+        .card-hover:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary), #2c3e50);
+            color: white;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(26, 35, 50, 0.3);
+        }
+        
+        .btn-secondary {
+            background: linear-gradient(135deg, var(--secondary), #b8941f);
+            color: white;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-secondary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(212, 175, 55, 0.3);
+        }
+        
+        .progress-bar {
+            background: linear-gradient(90deg, var(--accent), var(--secondary));
+            height: 6px;
+            border-radius: 3px;
+            transition: width 0.5s ease;
+        }
+        
+        .subject-card {
+            background: white;
+            border: 2px solid #f1f5f9;
+            transition: all 0.3s ease;
+        }
+        
+        .subject-card.selected {
+            border-color: var(--accent);
+            background: linear-gradient(135deg, rgba(74, 155, 142, 0.05), rgba(212, 175, 55, 0.05));
+        }
+        
+        .question-option {
+            background: #f8fafc;
+            border: 2px solid #e2e8f0;
+            transition: all 0.3s ease;
+        }
+        
+        .question-option:hover {
+            border-color: var(--accent);
+            background: rgba(74, 155, 142, 0.05);
+        }
+        
+        .question-option.selected {
+            border-color: var(--success);
+            background: rgba(39, 174, 96, 0.1);
+        }
+        
+        .timer-circle {
+            stroke-dasharray: 283;
+            stroke-dashoffset: 283;
+            transition: stroke-dashoffset 1s linear;
+        }
+        
+        .floating-animation {
+            animation: float 3s ease-in-out infinite;
+        }
+        
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+        }
+        
+        .gradient-text {
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .nav-bottom {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-top: 1px solid #e2e8f0;
+        }
+    </style>
+</head>
+<body class="bg-white">
+    <!-- Hero Section -->
+    <section class="hero-bg flex items-center justify-center text-white relative overflow-hidden">
+        <div class="absolute inset-0 bg-gradient-to-br from-black/20 to-transparent"></div>
+        <div class="container mx-auto px-4 text-center relative z-10">
+            <div class="floating-animation">
+                <h1 class="font-display text-4xl md:text-6xl font-bold mb-4">
+                    UPSC AI Platform
+                </h1>
+                <p class="text-lg md:text-xl mb-8 opacity-90">
+                    AI-Powered Prelims Test Series Generator & Mains Answer Evaluation
+                </p>
+                <div class="flex flex-col sm:flex-row gap-4 justify-center">
+                    <button onclick="scrollToTestGenerator()" class="btn-primary px-8 py-3 rounded-lg font-semibold">
+                        Start Prelims Test
+                    </button>
+                    <a href="mains-evaluation.html" class="btn-secondary px-8 py-3 rounded-lg font-semibold">
+                        Mains Evaluation
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Test Generator Section -->
+    <section id="test-generator" class="py-16 bg-gray-50">
+        <div class="container mx-auto px-4">
+            <div class="text-center mb-12">
+                <h2 class="font-display text-3xl md:text-4xl font-bold gradient-text mb-4">
+                    Prelims Test Generator
+                </h2>
+                <p class="text-gray-600 text-lg max-w-2xl mx-auto">
+                    Create customized practice tests based on your preparation needs. Get instant feedback and detailed explanations.
+                </p>
+            </div>
+
+            <!-- Test Configuration -->
+            <div id="test-config" class="max-w-4xl mx-auto">
+                <div class="bg-white rounded-2xl shadow-lg p-8 mb-8">
+                    <h3 class="font-display text-2xl font-semibold mb-6 text-center">Configure Your Test</h3>
+                    
+                    <!-- Subject Selection -->
+                    <div class="mb-8">
+                        <label class="block text-lg font-semibold mb-4">Select Subjects</label>
+                        <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+                            <div class="subject-card p-4 rounded-lg cursor-pointer text-center" data-subject="history">
+                                <div class="text-2xl mb-2">📚</div>
+                                <div class="font-semibold">History</div>
+                            </div>
+                            <div class="subject-card p-4 rounded-lg cursor-pointer text-center" data-subject="geography">
+                                <div class="text-2xl mb-2">🌍</div>
+                                <div class="font-semibold">Geography</div>
+                            </div>
+                            <div class="subject-card p-4 rounded-lg cursor-pointer text-center" data-subject="polity">
+                                <div class="text-2xl mb-2">🏛️</div>
+                                <div class="font-semibold">Polity</div>
+                            </div>
+                            <div class="subject-card p-4 rounded-lg cursor-pointer text-center" data-subject="economy">
+                                <div class="text-2xl mb-2">💰</div>
+                                <div class="font-semibold">Economy</div>
+                            </div>
+                            <div class="subject-card p-4 rounded-lg cursor-pointer text-center" data-subject="environment">
+                                <div class="text-2xl mb-2">🌱</div>
+                                <div class="font-semibold">Environment</div>
+                            </div>
+                            <div class="subject-card p-4 rounded-lg cursor-pointer text-center" data-subject="science">
+                                <div class="text-2xl mb-2">🔬</div>
+                                <div class="font-semibold">Science & Tech</div>
+                            </div>
+                            <div class="subject-card p-4 rounded-lg cursor-pointer text-center" data-subject="current-affairs">
+                                <div class="text-2xl mb-2">📰</div>
+                                <div class="font-semibold">Current Affairs</div>
+                            </div>
+                            <div class="subject-card p-4 rounded-lg cursor-pointer text-center" data-subject="csat">
+                                <div class="text-2xl mb-2">🧠</div>
+                                <div class="font-semibold">CSAT</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Test Settings -->
+                    <div class="grid md:grid-cols-3 gap-6 mb-8">
+                        <div>
+                            <label class="block font-semibold mb-2">Number of Questions</label>
+                            <input type="range" id="question-count" min="10" max="100" value="50" class="w-full">
+                            <div class="text-center mt-2">
+                                <span id="question-count-display" class="font-bold text-lg">50</span>
+                            </div>
+                        </div>
+                        <div>
+                            <label class="block font-semibold mb-2">Difficulty Level</label>
+                            <select id="difficulty" class="w-full p-3 border rounded-lg">
+                                <option value="easy">Easy</option>
+                                <option value="medium" selected>Medium</option>
+                                <option value="hard">Hard</option>
+                                <option value="mixed">Mixed</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block font-semibold mb-2">Time Limit</label>
+                            <select id="time-limit" class="w-full p-3 border rounded-lg">
+                                <option value="30">30 minutes</option>
+                                <option value="60" selected>60 minutes</option>
+                                <option value="90">90 minutes</option>
+                                <option value="120">120 minutes</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="text-center">
+                        <button onclick="generateTest()" class="btn-primary px-12 py-4 rounded-lg font-bold text-lg">
+                            Generate Test
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Test Interface -->
+            <div id="test-interface" class="hidden max-w-4xl mx-auto">
+                <div class="bg-white rounded-2xl shadow-lg p-8">
+                    <!-- Test Header -->
+                    <div class="flex justify-between items-center mb-6 pb-6 border-b">
+                        <div>
+                            <h3 class="font-display text-2xl font-semibold">Prelims Test</h3>
+                            <p class="text-gray-600">Question <span id="current-question">1</span> of <span id="total-questions">50</span></p>
+                        </div>
+                        <div class="flex items-center gap-4">
+                            <div class="text-center">
+                                <div class="relative w-16 h-16">
+                                    <svg class="w-16 h-16 transform -rotate-90">
+                                        <circle cx="32" cy="32" r="28" stroke="#e2e8f0" stroke-width="4" fill="none"/>
+                                        <circle id="timer-circle" cx="32" cy="32" r="28" stroke="#4a9b8e" stroke-width="4" fill="none" class="timer-circle"/>
+                                    </svg>
+                                    <div class="absolute inset-0 flex items-center justify-center">
+                                        <span id="timer-display" class="font-bold text-sm">60:00</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <button onclick="pauseTest()" class="btn-secondary px-4 py-2 rounded-lg">
+                                Pause
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Progress Bar -->
+                    <div class="mb-6">
+                        <div class="bg-gray-200 rounded-full h-2">
+                            <div id="test-progress" class="progress-bar h-2 rounded-full" style="width: 2%"></div>
+                        </div>
+                    </div>
+
+                    <!-- Question Content -->
+                    <div id="question-content" class="mb-8">
+                        <div class="mb-6">
+                            <h4 id="question-text" class="text-lg font-semibold mb-4">
+                                Which of the following statements about the Indian National Movement is correct?
+                            </h4>
+                            <div class="space-y-3">
+                                <div class="question-option p-4 rounded-lg cursor-pointer" data-option="a">
+                                    <span class="font-semibold mr-3">A.</span>
+                                    The Quit India Movement was launched in 1940
+                                </div>
+                                <div class="question-option p-4 rounded-lg cursor-pointer" data-option="b">
+                                    <span class="font-semibold mr-3">B.</span>
+                                    The Non-Cooperation Movement was suspended after the Chauri Chaura incident
+                                </div>
+                                <div class="question-option p-4 rounded-lg cursor-pointer" data-option="c">
+                                    <span class="font-semibold mr-3">C.</span>
+                                    The Simon Commission was welcomed by all Indian leaders
+                                </div>
+                                <div class="question-option p-4 rounded-lg cursor-pointer" data-option="d">
+                                    <span class="font-semibold mr-3">D.</span>
+                                    The Rowlatt Act was passed during the tenure of Lord Mountbatten
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Navigation -->
+                    <div class="flex justify-between items-center">
+                        <button onclick="previousQuestion()" id="prev-btn" class="btn-primary px-6 py-3 rounded-lg disabled:opacity-50" disabled>
+                            Previous
+                        </button>
+                        <div class="text-center">
+                            <p class="text-sm text-gray-600">Click on an option to select your answer</p>
+                        </div>
+                        <button onclick="nextQuestion()" id="next-btn" class="btn-secondary px-6 py-3 rounded-lg">
+                            Next
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Results Section -->
+            <div id="test-results" class="hidden max-w-4xl mx-auto">
+                <div class="bg-white rounded-2xl shadow-lg p-8">
+                    <div class="text-center mb-8">
+                        <div class="text-6xl mb-4">🎉</div>
+                        <h3 class="font-display text-3xl font-bold gradient-text mb-2">Test Completed!</h3>
+                        <p class="text-gray-600">Here's your performance analysis</p>
+                    </div>
+
+                    <div class="grid md:grid-cols-3 gap-6 mb-8">
+                        <div class="text-center p-6 bg-gradient-to-br from-green-50 to-green-100 rounded-xl">
+                            <div class="text-3xl font-bold text-green-600 mb-2" id="correct-answers">35</div>
+                            <div class="text-gray-600">Correct Answers</div>
+                        </div>
+                        <div class="text-center p-6 bg-gradient-to-br from-red-50 to-red-100 rounded-xl">
+                            <div class="text-3xl font-bold text-red-600 mb-2" id="incorrect-answers">15</div>
+                            <div class="text-gray-600">Incorrect Answers</div>
+                        </div>
+                        <div class="text-center p-6 bg-gradient-to-br from-blue-50 to-blue-100 rounded-xl">
+                            <div class="text-3xl font-bold text-blue-600 mb-2" id="final-score">70%</div>
+                            <div class="text-gray-600">Overall Score</div>
+                        </div>
+                    </div>
+
+                    <div class="text-center">
+                        <button onclick="retakeTest()" class="btn-primary px-8 py-3 rounded-lg mr-4">
+                            Retake Test
+                        </button>
+                        <a href="analytics.html" class="btn-secondary px-8 py-3 rounded-lg">
+                            View Analytics
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section class="py-16 bg-white">
+        <div class="container mx-auto px-4">
+            <div class="text-center mb-12">
+                <h2 class="font-display text-3xl md:text-4xl font-bold gradient-text mb-4">
+                    Platform Features
+                </h2>
+                <p class="text-gray-600 text-lg max-w-2xl mx-auto">
+                    Comprehensive AI-powered tools for UPSC preparation
+                </p>
+            </div>
+
+            <div class="grid md:grid-cols-3 gap-8">
+                <div class="card-hover bg-gray-50 p-8 rounded-2xl text-center">
+                    <div class="text-4xl mb-4">🤖</div>
+                    <h3 class="font-display text-xl font-semibold mb-3">AI-Powered Testing</h3>
+                    <p class="text-gray-600">Smart test generation based on your weak areas and performance history</p>
+                </div>
+                <div class="card-hover bg-gray-50 p-8 rounded-2xl text-center">
+                    <div class="text-4xl mb-4">📊</div>
+                    <h3 class="font-display text-xl font-semibold mb-3">Detailed Analytics</h3>
+                    <p class="text-gray-600">Comprehensive performance tracking with subject-wise analysis</p>
+                </div>
+                <div class="card-hover bg-gray-50 p-8 rounded-2xl text-center">
+                    <div class="text-4xl mb-4">💡</div>
+                    <h3 class="font-display text-xl font-semibold mb-3">Instant Feedback</h3>
+                    <p class="text-gray-600">Immediate explanations and learning recommendations</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Bottom Navigation -->
+    <nav class="nav-bottom fixed bottom-0 left-0 right-0 z-50">
+        <div class="container mx-auto px-4">
+            <div class="flex justify-around py-3">
+                <a href="index.html" class="flex flex-col items-center text-blue-600">
+                    <div class="text-xl mb-1">📝</div>
+                    <span class="text-xs font-medium">Prelims Test</span>
+                </a>
+                <a href="mains-evaluation.html" class="flex flex-col items-center text-gray-600">
+                    <div class="text-xl mb-1">✍️</div>
+                    <span class="text-xs font-medium">Mains Eval</span>
+                </a>
+                <a href="analytics.html" class="flex flex-col items-center text-gray-600">
+                    <div class="text-xl mb-1">📈</div>
+                    <span class="text-xs font-medium">Analytics</span>
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Spacer for bottom navigation -->
+    <div class="h-20"></div>
+
+    <script src="main.js"></script>
+</body>
+</html>

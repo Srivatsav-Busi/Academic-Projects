@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UPSC AI Platform - Mains Evaluation</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/echarts@5.4.3/dist/echarts.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #1a2332;
+            --secondary: #d4af37;
+            --accent: #4a9b8e;
+            --text: #2c3e50;
+            --success: #27ae60;
+            --warning: #f39c12;
+        }
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #ffffff;
+            color: var(--text);
+        }
+        
+        .font-display {
+            font-family: 'Playfair Display', serif;
+        }
+        
+        .hero-bg {
+            background: linear-gradient(135deg, rgba(26, 35, 50, 0.9), rgba(74, 155, 142, 0.8)), url('resources/ai-evaluation.png');
+            background-size: cover;
+            background-position: center;
+            min-height: 30vh;
+        }
+        
+        .card-hover {
+            transition: all 0.3s ease;
+        }
+        
+        .card-hover:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary), #2c3e50);
+            color: white;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(26, 35, 50, 0.3);
+        }
+        
+        .btn-secondary {
+            background: linear-gradient(135deg, var(--secondary), #b8941f);
+            color: white;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-secondary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(212, 175, 55, 0.3);
+        }
+        
+        .gradient-text {
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .nav-bottom {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-top: 1px solid #e2e8f0;
+        }
+        
+        .editor-container {
+            border: 2px solid #e2e8f0;
+            border-radius: 12px;
+            overflow: hidden;
+        }
+        
+        .editor-toolbar {
+            background: #f8fafc;
+            border-bottom: 1px solid #e2e8f0;
+            padding: 12px;
+        }
+        
+        .editor-content {
+            min-height: 300px;
+            padding: 16px;
+            outline: none;
+            font-size: 16px;
+            line-height: 1.6;
+        }
+        
+        .score-card {
+            background: linear-gradient(135deg, rgba(74, 155, 142, 0.1), rgba(212, 175, 55, 0.1));
+            border: 2px solid var(--accent);
+        }
+        
+        .feedback-item {
+            background: #f8fafc;
+            border-left: 4px solid var(--accent);
+            transition: all 0.3s ease;
+        }
+        
+        .feedback-item:hover {
+            background: rgba(74, 155, 142, 0.05);
+            transform: translateX(4px);
+        }
+        
+        .word-count {
+            background: var(--accent);
+            color: white;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: 600;
+        }
+        
+        .floating-animation {
+            animation: float 3s ease-in-out infinite;
+        }
+        
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+        }
+    </style>
+</head>
+<body class="bg-white">
+    <!-- Hero Section -->
+    <section class="hero-bg flex items-center justify-center text-white relative overflow-hidden">
+        <div class="absolute inset-0 bg-gradient-to-br from-black/20 to-transparent"></div>
+        <div class="container mx-auto px-4 text-center relative z-10">
+            <div class="floating-animation">
+                <h1 class="font-display text-4xl md:text-5xl font-bold mb-4">
+                    Mains Answer Evaluation
+                </h1>
+                <p class="text-lg md:text-xl mb-6 opacity-90">
+                    AI-Powered Assessment for UPSC Mains Preparation
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Evaluation Interface -->
+    <section class="py-16 bg-gray-50">
+        <div class="container mx-auto px-4">
+            <div class="max-w-6xl mx-auto">
+                <!-- Question Selection -->
+                <div id="question-selection" class="bg-white rounded-2xl shadow-lg p-8 mb-8">
+                    <h2 class="font-display text-2xl font-semibold mb-6 gradient-text">Select Question</h2>
+                    
+                    <div class="grid md:grid-cols-2 gap-6 mb-6">
+                        <div>
+                            <label class="block font-semibold mb-2">Subject</label>
+                            <select id="subject-select" class="w-full p-3 border rounded-lg">
+                                <option value="">Choose Subject</option>
+                                <option value="gs1">General Studies I - History & Geography</option>
+                                <option value="gs2">General Studies II - Polity & Governance</option>
+                                <option value="gs3">General Studies III - Economy & Environment</option>
+                                <option value="gs4">General Studies IV - Ethics & Integrity</option>
+                                <option value="essay">Essay Paper</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block font-semibold mb-2">Year</label>
+                            <select id="year-select" class="w-full p-3 border rounded-lg">
+                                <option value="">Choose Year</option>
+                                <option value="2024">2024</option>
+                                <option value="2023">2023</option>
+                                <option value="2022">2022</option>
+                                <option value="2021">2021</option>
+                                <option value="2020">2020</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div id="question-list" class="space-y-4">
+                        <!-- Questions will be populated here -->
+                    </div>
+                </div>
+
+                <!-- Answer Writing Interface -->
+                <div id="writing-interface" class="hidden">
+                    <div class="bg-white rounded-2xl shadow-lg p-8 mb-8">
+                        <div class="flex justify-between items-center mb-6">
+                            <h3 class="font-display text-xl font-semibold">Write Your Answer</h3>
+                            <div class="flex items-center gap-4">
+                                <div class="word-count" id="word-count">0 words</div>
+                                <button onclick="saveDraft()" class="btn-primary px-4 py-2 rounded-lg text-sm">
+                                    Save Draft
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="mb-6">
+                            <h4 id="selected-question" class="text-lg font-semibold mb-4">
+                                Discuss the role of women in the Indian National Movement. (250 words)
+                            </h4>
+                        </div>
+
+                        <div class="editor-container mb-6">
+                            <div class="editor-toolbar">
+                                <div class="flex gap-2">
+                                    <button onclick="formatText('bold')" class="p-2 hover:bg-gray-200 rounded">
+                                        <strong>B</strong>
+                                    </button>
+                                    <button onclick="formatText('italic')" class="p-2 hover:bg-gray-200 rounded">
+                                        <em>I</em>
+                                    </button>
+                                    <button onclick="formatText('underline')" class="p-2 hover:bg-gray-200 rounded">
+                                        <u>U</u>
+                                    </button>
+                                </div>
+                            </div>
+                            <div id="answer-editor" class="editor-content" contenteditable="true" placeholder="Write your answer here...">
+                            </div>
+                        </div>
+
+                        <div class="flex justify-between items-center">
+                            <div class="text-sm text-gray-600">
+                                Recommended length: 200-250 words
+                            </div>
+                            <button onclick="submitForEvaluation()" class="btn-secondary px-8 py-3 rounded-lg font-semibold">
+                                Submit for Evaluation
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- AI Evaluation Results -->
+                <div id="evaluation-results" class="hidden">
+                    <div class="bg-white rounded-2xl shadow-lg p-8 mb-8">
+                        <div class="text-center mb-8">
+                            <div class="text-6xl mb-4">🎯</div>
+                            <h3 class="font-display text-3xl font-bold gradient-text mb-2">Evaluation Complete!</h3>
+                            <p class="text-gray-600">Here's your detailed performance analysis</p>
+                        </div>
+
+                        <!-- Overall Score -->
+                        <div class="score-card rounded-2xl p-8 mb-8">
+                            <div class="text-center mb-6">
+                                <div class="text-5xl font-bold gradient-text mb-2" id="overall-score">78</div>
+                                <div class="text-gray-600">Overall Score</div>
+                            </div>
+                            <div class="grid md:grid-cols-3 gap-6">
+                                <div class="text-center">
+                                    <div class="text-2xl font-bold text-blue-600 mb-1" id="structure-score">82</div>
+                                    <div class="text-sm text-gray-600">Structure</div>
+                                </div>
+                                <div class="text-center">
+                                    <div class="text-2xl font-bold text-green-600 mb-1" id="content-score">75</div>
+                                    <div class="text-sm text-gray-600">Content</div>
+                                </div>
+                                <div class="text-center">
+                                    <div class="text-2xl font-bold text-purple-600 mb-1" id="language-score">77</div>
+                                    <div class="text-sm text-gray-600">Language</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Detailed Feedback -->
+                        <div class="mb-8">
+                            <h4 class="font-display text-xl font-semibold mb-4">Detailed Feedback</h4>
+                            <div class="space-y-4" id="feedback-list">
+                                <div class="feedback-item p-4 rounded-lg">
+                                    <div class="font-semibold text-green-600 mb-2">✅ Strengths</div>
+                                    <ul class="text-sm text-gray-700 space-y-1">
+                                        <li>• Good introduction with clear thesis statement</li>
+                                        <li>• Well-structured paragraphs with logical flow</li>
+                                        <li>• Relevant examples from the freedom struggle</li>
+                                    </ul>
+                                </div>
+                                <div class="feedback-item p-4 rounded-lg">
+                                    <div class="font-semibold text-orange-600 mb-2">⚠️ Areas for Improvement</div>
+                                    <ul class="text-sm text-gray-700 space-y-1">
+                                        <li>• Include more contemporary examples</li>
+                                        <li>• Strengthen the conclusion with forward-looking perspective</li>
+                                        <li>• Add more specific data and statistics</li>
+                                    </ul>
+                                </div>
+                                <div class="feedback-item p-4 rounded-lg">
+                                    <div class="font-semibold text-blue-600 mb-2">💡 Recommendations</div>
+                                    <ul class="text-sm text-gray-700 space-y-1">
+                                        <li>• Practice writing more concise introductions</li>
+                                        <li>• Study recent government schemes related to women empowerment</li>
+                                        <li>• Work on time management for better conclusion</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Model Answer Comparison -->
+                        <div class="mb-8">
+                            <h4 class="font-display text-xl font-semibold mb-4">Model Answer Comparison</h4>
+                            <div class="bg-gray-50 rounded-lg p-6">
+                                <div class="grid md:grid-cols-2 gap-6">
+                                    <div>
+                                        <h5 class="font-semibold mb-3 text-blue-600">Key Points in Your Answer</h5>
+                                        <ul class="text-sm space-y-2">
+                                            <li>• Mentioned role of women in various movements</li>
+                                            <li>• Discussed social reforms</li>
+                                            <li>• Highlighted key female leaders</li>
+                                        </ul>
+                                    </div>
+                                    <div>
+                                        <h5 class="font-semibold mb-3 text-green-600">Additional Points to Include</h5>
+                                        <ul class="text-sm space-y-2">
+                                            <li>• Quantitative data on participation</li>
+                                            <li>• Regional variations in women's involvement</li>
+                                            <li>• Impact on post-independence policies</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="text-center">
+                            <button onclick="tryAnotherQuestion()" class="btn-primary px-8 py-3 rounded-lg mr-4">
+                                Try Another Question
+                            </button>
+                            <a href="analytics.html" class="btn-secondary px-8 py-3 rounded-lg">
+                                View Progress
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Bottom Navigation -->
+    <nav class="nav-bottom fixed bottom-0 left-0 right-0 z-50">
+        <div class="container mx-auto px-4">
+            <div class="flex justify-around py-3">
+                <a href="index.html" class="flex flex-col items-center text-gray-600">
+                    <div class="text-xl mb-1">📝</div>
+                    <span class="text-xs font-medium">Prelims Test</span>
+                </a>
+                <a href="mains-evaluation.html" class="flex flex-col items-center text-blue-600">
+                    <div class="text-xl mb-1">✍️</div>
+                    <span class="text-xs font-medium">Mains Eval</span>
+                </a>
+                <a href="analytics.html" class="flex flex-col items-center text-gray-600">
+                    <div class="text-xl mb-1">📈</div>
+                    <span class="text-xs font-medium">Analytics</span>
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Spacer for bottom navigation -->
+    <div class="h-20"></div>
+
+    <script src="main.js"></script>
+</body>
+</html>

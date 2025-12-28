@@ -1,0 +1,70 @@
+company,position,location,priority,applied_date,status,notes
+Google,ML Engineer,Mountain View CA,tier_1,,not_applied,Focus on GCP and ML pipelines
+Google,ML Infrastructure Engineer,Mountain View CA,tier_1,,not_applied,ML platform and infrastructure
+Google,Data Scientist,Mountain View CA,tier_1,,not_applied,ML research and analytics
+Meta,ML Engineer,Menlo Park CA,tier_1,,not_applied,Real-time ML systems and MLOps
+Meta,ML Infrastructure Engineer,Menlo Park CA,tier_1,,not_applied,ML platform and infrastructure
+Meta,Data Scientist,Menlo Park CA,tier_1,,not_applied,ML research and personalization
+Netflix,ML Platform Engineer,Los Gatos CA,tier_1,,not_applied,ML infrastructure and pipelines
+Netflix,ML Infrastructure Engineer,Los Gatos CA,tier_1,,not_applied,ML platform and infrastructure
+Netflix,Data Scientist,Los Gatos CA,tier_1,,not_applied,Recommendation systems and analytics
+Uber,Senior ML Engineer,San Francisco CA,tier_1,,not_applied,ML systems and data processing
+Uber,ML Infrastructure Engineer,San Francisco CA,tier_1,,not_applied,ML platform and infrastructure
+Uber,Data Scientist,San Francisco CA,tier_1,,not_applied,ML research and optimization
+Airbnb,ML Engineer,San Francisco CA,tier_1,,not_applied,ML platform and data engineering
+Airbnb,ML Infrastructure Engineer,San Francisco CA,tier_1,,not_applied,ML platform and infrastructure
+Airbnb,Data Scientist,San Francisco CA,tier_1,,not_applied,ML research and personalization
+Stripe,Senior ML Engineer,San Francisco CA,tier_1,,not_applied,Financial ML and data processing
+Stripe,ML Infrastructure Engineer,San Francisco CA,tier_1,,not_applied,ML platform and infrastructure
+Stripe,Data Scientist,San Francisco CA,tier_1,,not_applied,Financial ML and fraud detection
+Databricks,ML Engineer,San Francisco CA,tier_1,,not_applied,ML platform and data processing
+Databricks,ML Infrastructure Engineer,San Francisco CA,tier_1,,not_applied,ML platform and infrastructure
+Databricks,Data Scientist,San Francisco CA,tier_1,,not_applied,ML research and analytics
+Snowflake,ML Engineer,San Mateo CA,tier_1,,not_applied,ML platform and data warehouse
+Snowflake,ML Infrastructure Engineer,San Mateo CA,tier_1,,not_applied,ML platform and infrastructure
+Snowflake,Data Scientist,San Mateo CA,tier_1,,not_applied,ML research and analytics
+Amazon,Senior ML Engineer,Seattle WA,tier_2,,not_applied,AWS ML services and SageMaker
+Amazon,ML Infrastructure Engineer,Seattle WA,tier_2,,not_applied,AWS ML platform and infrastructure
+Amazon,Data Scientist,Seattle WA,tier_2,,not_applied,ML research and personalization
+Microsoft,ML Engineer,Redmond WA,tier_2,,not_applied,Azure ML and data platform
+Microsoft,ML Infrastructure Engineer,Redmond WA,tier_2,,not_applied,Azure ML platform and infrastructure
+Microsoft,Data Scientist,Redmond WA,tier_2,,not_applied,ML research and analytics
+Apple,ML Engineer,Cupertino CA,tier_2,,not_applied,ML infrastructure and Core ML
+Apple,ML Infrastructure Engineer,Cupertino CA,tier_2,,not_applied,ML platform and infrastructure
+Apple,Data Scientist,Cupertino CA,tier_2,,not_applied,ML research and personalization
+Tesla,ML Engineer,Austin TX,tier_2,,not_applied,Autonomous vehicle ML systems
+Tesla,ML Infrastructure Engineer,Austin TX,tier_2,,not_applied,ML platform and infrastructure
+Tesla,Data Scientist,Austin TX,tier_2,,not_applied,Autonomous vehicle ML research
+Spotify,ML Engineer,New York NY,tier_2,,not_applied,Music recommendation ML systems
+Spotify,ML Infrastructure Engineer,New York NY,tier_2,,not_applied,ML platform and infrastructure
+Spotify,Data Scientist,New York NY,tier_2,,not_applied,Music recommendation and analytics
+Pinterest,ML Engineer,San Francisco CA,tier_2,,not_applied,Content recommendation ML
+Pinterest,ML Infrastructure Engineer,San Francisco CA,tier_2,,not_applied,ML platform and infrastructure
+Pinterest,Data Scientist,San Francisco CA,tier_2,,not_applied,Content recommendation and analytics
+LinkedIn,ML Engineer,Sunnyvale CA,tier_2,,not_applied,Professional network ML
+LinkedIn,ML Infrastructure Engineer,Sunnyvale CA,tier_2,,not_applied,ML platform and infrastructure
+LinkedIn,Data Scientist,Sunnyvale CA,tier_2,,not_applied,Professional network analytics
+Salesforce,ML Engineer,San Francisco CA,tier_2,,not_applied,CRM ML and data platform
+Salesforce,ML Infrastructure Engineer,San Francisco CA,tier_2,,not_applied,ML platform and infrastructure
+Salesforce,Data Scientist,San Francisco CA,tier_2,,not_applied,CRM ML and analytics
+Palantir,ML Engineer,Denver CO,tier_3,,not_applied,Big data ML and analytics
+Palantir,ML Infrastructure Engineer,Denver CO,tier_3,,not_applied,ML platform and infrastructure
+Palantir,Data Scientist,Denver CO,tier_3,,not_applied,Big data analytics and research
+Confluent,ML Engineer,Mountain View CA,tier_3,,not_applied,Kafka ecosystem and ML
+Confluent,ML Infrastructure Engineer,Mountain View CA,tier_3,,not_applied,ML platform and infrastructure
+Confluent,Data Scientist,Mountain View CA,tier_3,,not_applied,Streaming ML and analytics
+MongoDB,ML Engineer,New York NY,tier_3,,not_applied,Document database ML platform
+MongoDB,ML Infrastructure Engineer,New York NY,tier_3,,not_applied,ML platform and infrastructure
+MongoDB,Data Scientist,New York NY,tier_3,,not_applied,Document database analytics
+Elastic,ML Engineer,Mountain View CA,tier_3,,not_applied,Search ML and analytics
+Elastic,ML Infrastructure Engineer,Mountain View CA,tier_3,,not_applied,ML platform and infrastructure
+Elastic,Data Scientist,Mountain View CA,tier_3,,not_applied,Search analytics and research
+HashiCorp,ML Engineer,San Francisco CA,tier_3,,not_applied,Infrastructure ML automation
+HashiCorp,ML Infrastructure Engineer,San Francisco CA,tier_3,,not_applied,ML platform and infrastructure
+HashiCorp,Data Scientist,San Francisco CA,tier_3,,not_applied,Infrastructure analytics
+Cloudflare,ML Engineer,Austin TX,tier_3,,not_applied,Network security ML
+Cloudflare,ML Infrastructure Engineer,Austin TX,tier_3,,not_applied,ML platform and infrastructure
+Cloudflare,Data Scientist,Austin TX,tier_3,,not_applied,Network security analytics
+Twilio,ML Engineer,San Francisco CA,tier_3,,not_applied,Communication platform ML
+Twilio,ML Infrastructure Engineer,San Francisco CA,tier_3,,not_applied,ML platform and infrastructure
+Twilio,Data Scientist,San Francisco CA,tier_3,,not_applied,Communication analytics

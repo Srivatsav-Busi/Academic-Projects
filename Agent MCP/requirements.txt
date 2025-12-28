@@ -1,0 +1,13 @@
+# Core dependencies
+fastmcp
+
+# Fixed dependency versions to resolve conflicts
+openai>=1.81.0,<2.0.0
+cachetools>=2.0.0,<6.0.0
+anyio>=4.7.0
+fastapi>=0.115.0
+
+# Other dependencies (keeping current versions)
+llama-index-llms-openai>=0.5.4
+google-auth>=2.40.3
+

@@ -1,0 +1,35 @@
+# Google Drive Configuration
+# Your specific Google Drive folder for resume uploads
+
+google_drive:
+  # Your target folder ID (extracted from the URL)
+  target_folder_id: "1aAPPAvPlgq5VTHbMM-QV4TRban-NZ1oF"
+  
+  # Folder URL for reference
+  folder_url: "https://drive.google.com/drive/folders/1aAPPAvPlgq5VTHbMM-QV4TRban-NZ1oF"
+  
+  # Folder name (for display purposes)
+  folder_name: "Srivatsav's Resume Collection"
+  
+  # File naming convention
+  file_naming:
+    prefix: "Resume"
+    separator: "_"
+    include_company: true
+    include_position: true
+    include_date: false
+    format: "{prefix}_{company}_{position}.docx"
+  
+  # Upload settings
+  upload_settings:
+    create_subfolders: false
+    organize_by_company: false
+    organize_by_date: false
+    overwrite_existing: true
+
+
+
+
+
+
+
